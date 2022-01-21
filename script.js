@@ -130,7 +130,7 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let Obj = JSON.parse(xhr.response);
-        console.log(Obj);
+        console.log("密码登录", Obj);
         if (Obj.code === 200) {
           Cookie.setCookie("userName", Obj.profile.nickname, 3600); // 登陆成功设置cookies
           errors.style.display = "none";
@@ -184,9 +184,8 @@ window.onload = function () {
     );
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        console.log(xhr.status);
         let Obj = JSON.parse(xhr.response);
-        console.log(Obj);
+        console.log("短信登录", Obj);
         if (Obj.code === 200) {
           Cookie.setCookie("userName", Obj.profile.nickname, 3600); // 登陆成功设置cookies
           errors.style.display = "none";
@@ -255,7 +254,7 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let Obj = JSON.parse(xhr.response);
-        console.log(Obj);
+        console.log("退出登录", Obj);
         Cookie.removeCookie("userName"); // 退出后清除cookie
         loginBtn.style.display = "block"; // 显示登录按钮
         avatar.style.display = "none"; // 隐藏头像
@@ -320,7 +319,7 @@ window.onload = function () {
     searchRes.style.display = "none";
   });
 
-  // 轮播图异步请求，用于获取图片地址
+  // 轮播图模块的异步请求
   function carouselAjax() {
     let xhr = new XMLHttpRequest();
     xhr.open(
@@ -355,14 +354,20 @@ window.onload = function () {
         img.src = `${imgList[index]}`;
         background.style.background = `url(${imgList[0]})`;
         btns[0].style.backgroundPositionX = "23px";
-        interval = setInterval(carouselNext, 5000); // 五秒切换一次
-        // 轮播图事件：鼠标进入停止，鼠标离开继续
-        carouBox.addEventListener("mouseenter", function () {
-          clearInterval(interval);
-        });
-        carouBox.addEventListener("mouseleave", function () {
-          interval = setInterval(carouselNext, 5000);
-        });
+
+        clearInterval(interval);
+
+        setTimeout(() => {
+          interval = setInterval(carouselNext, 5000); // 五秒切换一次
+          // 轮播图事件：鼠标进入停止，鼠标离开继续
+          carouBox.addEventListener("mouseenter", function () {
+            clearInterval(interval);
+          });
+          carouBox.addEventListener("mouseleave", function () {
+            interval = setInterval(carouselNext, 5000);
+          });
+        }, 5000);
+
         // 轮播图自动翻页的函数
         let timeoutID;
         function carouselNext() {
@@ -372,7 +377,7 @@ window.onload = function () {
           img.style.opacity = "0";
           timeoutID = setTimeout(function () {
             img.style.opacity = "1";
-            img.src = `${imgList[index]}`;
+            img.src = imgList[index];
             background.style.background = `url(${imgList[index]})`;
             btns[index].style.backgroundPositionX = "23px";
           }, 900);
@@ -407,7 +412,7 @@ window.onload = function () {
     });
   }
 
-  // 获取歌的单异步请求
+  // 获取歌单的异步请求
   function playlistAjax(playlistID) {
     let xhr = new XMLHttpRequest();
     xhr.open(
@@ -418,7 +423,6 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let Obj = JSON.parse(xhr.response);
-        console.log(Obj);
         music.src = `https://music.163.com/song/media/outer/url?id=${Obj.playlist.tracks[0].id}.mp3`;
         audio.load();
         audio.play();
@@ -445,7 +449,6 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let result = JSON.parse(xhr.response).result;
-        console.log(result);
         let playAudioBtns = document.querySelectorAll("a.playAudio");
         for (let i = 0; i < playlistImgDiv.length; i++) {
           playlistImgs[i].src = result[i].picUrl;
@@ -500,7 +503,6 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let monthData = JSON.parse(xhr.response).monthData;
-        console.log(monthData);
         let g1PlayBtns = document.querySelectorAll("#g1 a.play-icon-btn");
         let g2PlayBtns = document.querySelectorAll("#g2 a.play-icon-btn");
         let g3PlayBtns = document.querySelectorAll("#g3 a.play-icon-btn");
@@ -627,7 +629,6 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let Obj = JSON.parse(xhr.response);
-        console.log(Obj);
         billCoverImgs[0].src = Obj.playlist.coverImgUrl;
         let risingBillSongs = document.querySelectorAll(
           "div.rising-bill a.songs"
