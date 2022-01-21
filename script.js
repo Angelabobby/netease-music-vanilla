@@ -31,6 +31,8 @@ window.onload = function () {
   let errorsDesc = document.querySelector("span.errors-desc"); // 密码或验证码错误的描述
   let audio = document.querySelector("audio.audio"); // 播放器模块
   let music = document.querySelector("source.music"); // 音乐源
+  let playerName = document.querySelector("span.player-name"); // 播放器模块歌名
+  let playerArtist = document.querySelector("span.player-artist"); // 播放器模块歌手名
   // 保存异步请求结果的数组
   let imgList = [];
   // 保存动态生成小圆点对象的数组
@@ -405,6 +407,33 @@ window.onload = function () {
     });
   }
 
+  // 获取歌的单异步请求
+  function playlistAjax(playlistID) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(
+      "get",
+      `https://muise-git-master-329639010.vercel.app/playlist/detail?id=${playlistID}`
+    );
+    xhr.send();
+    xhr.addEventListener("readystatechange", function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        let Obj = JSON.parse(xhr.response);
+        console.log(Obj);
+        music.src = `https://music.163.com/song/media/outer/url?id=${Obj.playlist.tracks[0].id}.mp3`;
+        audio.load();
+        audio.play();
+        playerName.innerHTML = Obj.playlist.tracks[0].name;
+        playerArtist.innerHTML = Obj.playlist.tracks[0].ar[0].name;
+        if (isLocked === false) {
+          player.style.bottom = 0 + "px";
+          setTimeout(() => {
+            player.style.bottom = -54 + "px";
+          }, 3000);
+        }
+      }
+    });
+  }
+
   // 热门推荐的异步请求，用于获取歌单封面图片、歌单播放信息和歌单描述
   function playlistRecomAjax() {
     let xhr = new XMLHttpRequest();
@@ -416,17 +445,49 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let result = JSON.parse(xhr.response).result;
+        console.log(result);
+        let playAudioBtns = document.querySelectorAll("a.playAudio");
         for (let i = 0; i < playlistImgDiv.length; i++) {
           playlistImgs[i].src = result[i].picUrl;
           playlistPlayCountSpan[i].innerHTML = `${parseInt(
             result[i].playCount / 10000
           )}万`;
           playlistDesc[i].innerHTML = result[i].name;
+          playAudioBtns[i].addEventListener("click", function (e) {
+            e.preventDefault();
+            playlistAjax(result[i].id);
+          });
         }
       }
     });
   }
   playlistRecomAjax();
+
+  // 获取专辑信息的异步请求函数
+  function albumAjax(albumID) {
+    let xhr = new XMLHttpRequest();
+    xhr.open(
+      "get",
+      `https://muise-git-master-329639010.vercel.app/album?id=${albumID}`
+    );
+    xhr.send();
+    xhr.addEventListener("readystatechange", function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        let Obj = JSON.parse(xhr.response);
+        music.src = `https://music.163.com/song/media/outer/url?id=${Obj.songs[0].id}.mp3`;
+        audio.load();
+        audio.play();
+        playerName.innerHTML = Obj.songs[0].name;
+        playerArtist.innerHTML = Obj.songs[0].ar[0].name;
+        if (isLocked === false) {
+          player.style.bottom = 0 + "px";
+          setTimeout(() => {
+            player.style.bottom = -54 + "px";
+          }, 3000);
+        }
+      }
+    });
+  }
 
   // 新碟上架的异步请求
   function newAjax() {
@@ -439,43 +500,62 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let monthData = JSON.parse(xhr.response).monthData;
+        console.log(monthData);
+        let g1PlayBtns = document.querySelectorAll("#g1 a.play-icon-btn");
+        let g2PlayBtns = document.querySelectorAll("#g2 a.play-icon-btn");
+        let g3PlayBtns = document.querySelectorAll("#g3 a.play-icon-btn");
+        let g4PlayBtns = document.querySelectorAll("#g4 a.play-icon-btn");
         // 第1、3组，下标5-9
         for (let i = 5; i < 10; i++) {
           document.querySelectorAll("#g1 .coverImg")[i - 5].src =
             monthData[i].picUrl;
-          document.querySelectorAll("#g1 .songName")[
-            i - 5
-          ].innerHTML = `${monthData[i].name}`;
-          document.querySelectorAll("#g1 .songArtist")[
-            i - 5
-          ].innerHTML = `${monthData[i].artists[0].name}`;
+          document.querySelectorAll("#g1 .songName")[i - 5].innerHTML =
+            monthData[i].name;
+          document.querySelectorAll("#g1 .songArtist")[i - 5].innerHTML =
+            monthData[i].artists[0].name;
+
           document.querySelectorAll("#g3 .coverImg")[i - 5].src =
             monthData[i].picUrl;
-          document.querySelectorAll("#g3 .songName")[
-            i - 5
-          ].innerHTML = `${monthData[i].name}`;
-          document.querySelectorAll("#g3 .songArtist")[
-            i - 5
-          ].innerHTML = `${monthData[i].artists[0].name}`;
+          document.querySelectorAll("#g3 .songName")[i - 5].innerHTML =
+            monthData[i].name;
+          document.querySelectorAll("#g3 .songArtist")[i - 5].innerHTML =
+            monthData[i].artists[0].name;
+
+          g1PlayBtns[i - 5].addEventListener("click", function (e) {
+            e.preventDefault();
+            albumAjax(monthData[i].id);
+          });
+
+          g3PlayBtns[i - 5].addEventListener("click", function (e) {
+            e.preventDefault();
+            albumAjax(monthData[i].id);
+          });
         }
         // 第2、4组，下标0-4
         for (let i = 0; i < 5; i++) {
           document.querySelectorAll("#g2 .coverImg")[i].src =
             monthData[i].picUrl;
-          document.querySelectorAll("#g2 .songName")[
-            i
-          ].innerHTML = `${monthData[i].name}`;
-          document.querySelectorAll("#g2 .songArtist")[
-            i
-          ].innerHTML = `${monthData[i].artists[0].name}`;
+          document.querySelectorAll("#g2 .songName")[i].innerHTML =
+            monthData[i].name;
+          document.querySelectorAll("#g2 .songArtist")[i].innerHTML =
+            monthData[i].artists[0].name;
+
           document.querySelectorAll("#g4 .coverImg")[i].src =
             monthData[i].picUrl;
-          document.querySelectorAll("#g4 .songName")[
-            i
-          ].innerHTML = `${monthData[i].name}`;
-          document.querySelectorAll("#g4 .songArtist")[
-            i
-          ].innerHTML = `${monthData[i].artists[0].name}`;
+          document.querySelectorAll("#g4 .songName")[i].innerHTML =
+            monthData[i].name;
+          document.querySelectorAll("#g4 .songArtist")[i].innerHTML =
+            monthData[i].artists[0].name;
+
+          g2PlayBtns[i].addEventListener("click", function (e) {
+            e.preventDefault();
+            albumAjax(monthData[i].id);
+          });
+
+          g4PlayBtns[i].addEventListener("click", function (e) {
+            e.preventDefault();
+            albumAjax(monthData[i].id);
+          });
         }
       }
     });
@@ -536,8 +616,6 @@ window.onload = function () {
   let billCoverImgs = document.querySelectorAll("div.bill-cover img");
 
   // 榜单
-  let playerName = document.querySelector("span.player-name");
-  let playerArtist = document.querySelector("span.player-artist");
   // 飙升榜的异步请求
   function risingBillAjax() {
     let xhr = new XMLHttpRequest();
@@ -549,7 +627,7 @@ window.onload = function () {
     xhr.addEventListener("readystatechange", function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         let Obj = JSON.parse(xhr.response);
-        console.log(Obj)
+        console.log(Obj);
         billCoverImgs[0].src = Obj.playlist.coverImgUrl;
         let risingBillSongs = document.querySelectorAll(
           "div.rising-bill a.songs"
@@ -559,7 +637,9 @@ window.onload = function () {
         ); // 获取播放按钮
         for (let i = 0; i < risingBillSongs.length; i++) {
           risingBillSongs[i].innerHTML = Obj.playlist.tracks[i].name;
-          risingBillSongs[i].href = `https://music.163.com/#/song?id=${Obj.playlist.tracks[i].id}`;
+          risingBillSongs[
+            i
+          ].href = `https://music.163.com/#/song?id=${Obj.playlist.tracks[i].id}`;
           risingBillSongs[i].title = Obj.playlist.tracks[i].name;
           risingBillPlayBtns[i].addEventListener("click", function (e) {
             e.preventDefault();
@@ -568,7 +648,7 @@ window.onload = function () {
             audio.play();
             playerName.innerHTML = Obj.playlist.tracks[i].name;
             playerArtist.innerHTML = Obj.playlist.tracks[i].ar[0].name;
-            if(isLocked === false) {
+            if (isLocked === false) {
               player.style.bottom = 0 + "px";
               setTimeout(() => {
                 player.style.bottom = -54 + "px";
@@ -598,7 +678,9 @@ window.onload = function () {
         ); // 获取播放按钮
         for (let i = 0; i < newBillSongs.length; i++) {
           newBillSongs[i].innerHTML = Obj.playlist.tracks[i].name;
-          newBillSongs[i].href = `https://music.163.com/#/song?id=${Obj.playlist.tracks[i].id}`;
+          newBillSongs[
+            i
+          ].href = `https://music.163.com/#/song?id=${Obj.playlist.tracks[i].id}`;
           newBillSongs[i].title = Obj.playlist.tracks[i].name;
           newBillPlayBtns[i].addEventListener("click", function (e) {
             e.preventDefault();
@@ -607,7 +689,7 @@ window.onload = function () {
             audio.play();
             playerName.innerHTML = Obj.playlist.tracks[i].name;
             playerArtist.innerHTML = Obj.playlist.tracks[i].ar[0].name;
-            if(isLocked === false) {
+            if (isLocked === false) {
               player.style.bottom = 0 + "px";
               setTimeout(() => {
                 player.style.bottom = -54 + "px";
@@ -639,7 +721,9 @@ window.onload = function () {
         ); // 获取播放按钮
         for (let i = 0; i < originalBillSongs.length; i++) {
           originalBillSongs[i].innerHTML = Obj.playlist.tracks[i].name;
-          originalBillSongs[i].href = `https://music.163.com/#/song?id=${Obj.playlist.tracks[i].id}`;
+          originalBillSongs[
+            i
+          ].href = `https://music.163.com/#/song?id=${Obj.playlist.tracks[i].id}`;
           originalBillSongs[i].title = Obj.playlist.tracks[i].name;
           originalBillPlayBtns[i].addEventListener("click", function (e) {
             e.preventDefault();
@@ -648,7 +732,7 @@ window.onload = function () {
             audio.play();
             playerName.innerHTML = Obj.playlist.tracks[i].name;
             playerArtist.innerHTML = Obj.playlist.tracks[i].ar[0].name;
-            if(isLocked === false) {
+            if (isLocked === false) {
               player.style.bottom = 0 + "px";
               setTimeout(() => {
                 player.style.bottom = -54 + "px";

@@ -1118,6 +1118,20 @@ a.img-glass {
   background-position-y: -570px;
 }
 
+a.play-icon-btn {
+  display: block;
+  position: relative;
+  left: 78px;
+  bottom: 26px;
+  width: 22px;
+  height: 22px;
+  background-image: url(https://s2.music.126.net/style/web2/img/iconall.png?2c887a6e938963dcc0a5f997a822b64f);
+  background-position: 0 -85px;
+}
+a.play-icon-btn:hover {
+  background-position: 0 -110px;
+}
+
 a.scrollLeft,
 a.scrollRight {
   display: block;
