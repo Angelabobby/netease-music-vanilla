@@ -31,8 +31,12 @@ window.onload = function () {
   let errorsDesc = document.querySelector("span.errors-desc"); // 密码或验证码错误的描述
   let audio = document.querySelector("audio.audio"); // 播放器模块
   let music = document.querySelector("source.music"); // 音乐源
-  let playerName = document.querySelector("span.player-name"); // 播放器模块歌名
-  let playerArtist = document.querySelector("span.player-artist"); // 播放器模块歌手名
+  let playerName = document.querySelector("span.player-name"); // 播放器显示歌名
+  let playerArtist = document.querySelector("span.player-artist"); // 播放器显示歌手名
+  let playerMod = document.querySelector("div.player-mod"); // 播放器模块(固定定位)
+  let player = document.querySelector("div.player"); // 播放器容器(绝对定位，需要移动)
+  let lock = document.querySelector("a.lock"); // 记录是否固定的flag变量
+  let isLocked = false;
   // 保存异步请求结果的数组
   let imgList = [];
   // 保存动态生成小圆点对象的数组
@@ -319,6 +323,10 @@ window.onload = function () {
     searchRes.style.display = "none";
   });
 
+  carouBox.addEventListener("mouseover", function () {
+    console.log(1);
+  });
+
   // 轮播图模块的异步请求
   function carouselAjax() {
     let xhr = new XMLHttpRequest();
@@ -431,7 +439,7 @@ window.onload = function () {
         if (isLocked === false) {
           player.style.bottom = 0 + "px";
           setTimeout(() => {
-            player.style.bottom = -54 + "px";
+            player.style.bottom = -45 + "px";
           }, 3000);
         }
       }
@@ -485,7 +493,7 @@ window.onload = function () {
         if (isLocked === false) {
           player.style.bottom = 0 + "px";
           setTimeout(() => {
-            player.style.bottom = -54 + "px";
+            player.style.bottom = -45 + "px";
           }, 3000);
         }
       }
@@ -652,7 +660,7 @@ window.onload = function () {
             if (isLocked === false) {
               player.style.bottom = 0 + "px";
               setTimeout(() => {
-                player.style.bottom = -54 + "px";
+                player.style.bottom = -45 + "px";
               }, 3000);
             }
           });
@@ -693,7 +701,7 @@ window.onload = function () {
             if (isLocked === false) {
               player.style.bottom = 0 + "px";
               setTimeout(() => {
-                player.style.bottom = -54 + "px";
+                player.style.bottom = -45 + "px";
               }, 3000);
             }
           });
@@ -736,7 +744,7 @@ window.onload = function () {
             if (isLocked === false) {
               player.style.bottom = 0 + "px";
               setTimeout(() => {
-                player.style.bottom = -54 + "px";
+                player.style.bottom = -45 + "px";
               }, 3000);
             }
           });
@@ -840,15 +848,19 @@ window.onload = function () {
   });
 
   // 播放器模块
-  let playerMod = document.querySelector("div.player-mod");
-  let player = document.querySelector("div.player");
-  let lock = document.querySelector("a.lock");
-  let isLocked = false;
+  // 打开页面后若未选择固定，则5秒后隐藏播放器
+  if (isLocked === false) {
+    player.style.bottom = 0 + "px";
+    setTimeout(() => {
+      player.style.bottom = -45 + "px";
+    }, 5000);
+  }
+  // 移入显示，移出隐藏的函数和相应的事件
   function playerEnter() {
     player.style.bottom = 0 + "px";
   }
   function playerLeave() {
-    player.style.bottom = -54 + "px";
+    player.style.bottom = -45 + "px";
   }
   playerMod.addEventListener("mouseenter", playerEnter);
   playerMod.addEventListener("mouseleave", playerLeave);
@@ -856,6 +868,7 @@ window.onload = function () {
   // 解锁enter background-position: -80px -400px;
   // 锁定leave background-position: -100px -380px;
   // 锁定enter background-position: -100px -400px;
+  // 固定/取消固定功能
   function unlockedEnter() {
     lock.style = "background-position: -80px -400px;";
   }
@@ -868,7 +881,6 @@ window.onload = function () {
   function lockedLeave() {
     lock.style = "background-position: -100px -380px;";
   }
-  // 固定/取消固定功能
   lock.addEventListener("mouseenter", unlockedEnter);
   lock.addEventListener("mouseleave", unlockedLeave);
   lock.addEventListener("click", function (e) {
