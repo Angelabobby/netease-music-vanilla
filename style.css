@@ -1795,8 +1795,12 @@ div.footer-right li span {
   background-size: 180px 139px;
 }
 
-div.footer-right li span:not(:first-child) {
+div.footer-right ul span {
   margin-left: 4px;
+}
+
+div.footer-right ul span.first-desc {
+  margin-left: -6px;
 }
 
 div.footer-right a.amped {
