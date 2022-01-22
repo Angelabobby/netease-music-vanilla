@@ -6,11 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>小项目-网易云音乐</title>
     <link rel="stylesheet" href="style.css" />
-    <link rel="icon" href="https://s1.music.126.net/style/favicon.ico?v20180823">
+    <link
+      rel="icon"
+      href="https://s1.music.126.net/style/favicon.ico?v20180823"
+    />
   </head>
 
   <body>
     <!-- 主导航条 -->
+    <button class="test">test</button>
     <div class="top">
       <div class="topContent">
         <a href="https://music.163.com/#">
@@ -1061,11 +1065,36 @@
 
       <!-- 主体右部分 -->
       <div class="bulkRight">
-        <div class="user-profile">
-          <div class="my-info">
+        <div class="login-info">
+          <div class="login-info-desc">
             <p>登录网易云音乐，可以享受无限收藏的乐趣，并且无限同步到手机</p>
             <a href="" class="login-btn-red">用户登录</a>
           </div>
+        </div>
+        <div class="user-profile">
+          <div class="profile-top">
+            <a href="" class="profile-top-left">
+              <img src="" alt="" class="profile-avatar" />
+            </a>
+            <div class="profile-top-right">
+              <h4 class="profile-username-box">
+                <a href="" class="profile-username"></a>
+              </h4>
+              <p class="level-box">
+                <span href="" class="level"></span>
+              </p>
+              <div>
+                <a href="">
+                  <i></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <ul class="profile-info">
+            <li class="event-count"></li>
+            <li class="follows"></li>
+            <li class="followeds"></li>
+          </ul>
         </div>
         <div class="singer">
           <h3 class="singer-title">
@@ -1301,7 +1330,7 @@
         <a href="" class="lock"></a>
       </div>
     </div>
-
+    <script src="jquery-3.6.0.js"></script>
     <script type="text/javascript" src="script.js"></script>
   </body>
 </html>

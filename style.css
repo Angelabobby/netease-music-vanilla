@@ -3,6 +3,12 @@ body {
   background-color: rgb(245, 245, 245);
 }
 
+button.test {
+  position: absolute;
+  left: 200px;
+  top: 450px;
+}
+
 div.top {
   width: 100%;
   height: 70px;
@@ -1425,18 +1431,17 @@ div.bill-more a:hover {
 
 div.bulkRight {
   width: 249px;
-  /* height: 920px; */
   height: 1425px;
   float: left;
   background-color: white;
 }
 
-div.user-profile {
+div.login-info {
   width: 250px;
   height: 126px;
 }
 
-div.user-profile div.my-info {
+div.login-info div.login-info-desc {
   width: 250px;
   height: 126px;
   background-image: url(https://s2.music.126.net/style/web2/img/index/index.png?5c61d2ac53be26acdd71d4e2e711470f);
@@ -1444,7 +1449,7 @@ div.user-profile div.my-info {
   background-position-y: 0;
 }
 
-div.my-info p {
+div.login-info-desc p {
   width: 205px;
   height: 44px;
   line-height: 22px;
@@ -1454,7 +1459,7 @@ div.my-info p {
   color: rgb(102, 102, 102);
 }
 
-div.my-info a {
+div.login-info-desc a {
   display: block;
   width: 100px;
   height: 31px;
@@ -1469,8 +1474,88 @@ div.my-info a {
   background-position-y: -195px;
 }
 
-div.my-info a:hover {
+div.login-info-desc a:hover {
   background-position-x: -110px;
+}
+
+div.user-profile {
+  width: 250px;
+  height: 165px;
+  padding-top: 20px;
+  background-image: url(https://s2.music.126.net/style/web2/img/index/index.png?4ef5520a984b191be8ec49769de4a2c3);
+  background-position: 0 -270px;
+  display: none;
+}
+
+div.profile-top {
+  width: 250px;
+  height: 90px;
+}
+
+a.profile-top-left {
+  display: block;
+  width: 80px;
+  height: 80px;
+  padding: 2px;
+  margin-left: 20px;
+  border: 1px solid #dadada;
+  background: #fff;
+  float: left;
+}
+
+img.profile-avatar {
+  width: 80px;
+  height: 80px;
+}
+
+div.profile-top-right {
+  width: 115px;
+  height: 87px;
+  padding-top: 3px;
+  margin-left: 18px;
+  float: left;
+}
+
+h4.profile-username-box {
+  width: 115px;
+  height: 19px;
+  overflow: hidden;
+  margin: 0;
+}
+
+a.profile-username {
+  color: rgb(51, 51, 51);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  overflow: hidden;
+  vertical-align: middle;
+}
+a.profile-username:hover {
+  text-decoration: underline;
+}
+
+p.level-box {
+  width: 115px;
+  height: 17px;
+  margin: 5px 0 0 0;
+}
+
+span.level {
+  font-size: 12px;
+}
+
+ul.profile-info {
+  width: 230px;
+  height: 40px;
+  margin: 22px 0 0 20px;
+  list-style: none;
+  padding:0;
+}
+
+ul.profile-info li {
+  float: left;
+  margin-right: 15px;
 }
 
 div.singer {
@@ -1856,7 +1941,8 @@ span.player-name {
   font-weight: 600;
 }
 
-span.player-name, span.player-artist {
+span.player-name,
+span.player-artist {
   display: block;
   height: 54px;
   line-height: 54px;

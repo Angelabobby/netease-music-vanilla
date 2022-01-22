@@ -54,13 +54,20 @@ window.onload = function () {
       time.setSeconds(time.getSeconds() + seconds);
       document.cookie = `${key}=${value}; expires=${time.toUTCString()}`;
     },
-    getCookie: function (key) {
-      let cookiesArr = document.cookie.split("; ");
-      for (let i = 0; i < cookiesArr.length; i++) {
-        if (cookiesArr[i].split("=")[0] === key) {
-          return cookiesArr[i].split("=")[1];
+    getCookie: function getCookie(key) {
+      let name = key + "=";
+      let decodedCookie = decodeURIComponent(document.cookie);
+      let ca = decodedCookie.split(";");
+      for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == " ") {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
         }
       }
+      return "";
     },
     removeCookie: function (key) {
       this.setCookie(key, "", -1);
@@ -68,12 +75,41 @@ window.onload = function () {
   };
 
   // 初始化页面，若有cookie则不需要登录
+  let loginInfo = document.querySelector("div.login-info");
+  let userProfile = document.querySelector("div.user-profile");
   if (Cookie.getCookie("userName")) {
     loginBtn.style.display = "none"; // 隐藏登录按钮
     avatar.style.display = "block"; // 显示头像
     loginBtnBox.addEventListener("mouseenter", enter); // 鼠标进入事件显示下拉框
     loginBtnBox.addEventListener("mouseleave", leave); // 鼠标移出事件隐藏下拉框
   }
+  // 若有cookie，则从cookie读取数据
+  let profile = Cookie.getCookie("profile");
+  let profileAvatar = document.querySelector("img.profile-avatar");
+  let profileUsername = document.querySelector("a.profile-username");
+  let level = document.querySelector("span.level");
+  let eventCount = document.querySelector("li.event-count");
+  let follows = document.querySelector("li.follows");
+  let followeds = document.querySelector("li.followeds");
+  function loginFillInfo(profile) {
+    if (profile) {
+      profileObj = JSON.parse(profile);
+      profileAvatar.src = profileObj.avatarUrl;
+      profileUsername.innerHTML = profileObj.nickname;
+      eventCount.innerHTML = "动态 : " + profileObj.eventCount;
+      follows.innerHTML = "关注 : " + profileObj.follows;
+      followeds.innerHTML = "粉丝 : " + profileObj.followeds;
+      loginInfo.style.display = "none"; // 隐藏登录信息框
+      userProfile.style.display = "block"; // 显示用户详情框
+      $.get({
+        url: `https://muise-git-master-329639010.vercel.app/user/detail?uid=${Cookie.getCookie("userId")}`,
+        success: function (data) {
+          level.innerHTML = "等级: " + data.level;
+        },
+      });
+    }
+  }
+  loginFillInfo(profile);
 
   // 导航栏的登录按钮点击事件，点击后打开登录框
   loginBtn.addEventListener("click", function (e) {
@@ -118,6 +154,16 @@ window.onload = function () {
     });
   });
 
+  // 测试jQuery的Ajax
+  $(".test").click(function () {
+    $.get({
+      url: "https://muise-git-master-329639010.vercel.app/user/detail?uid=6393633940",
+      success: function (data) {
+        console.log(data);
+      },
+    });
+  });
+
   // 密码登录AJAX
   function pwdLoginAjax() {
     let xhr = new XMLHttpRequest();
@@ -137,6 +183,9 @@ window.onload = function () {
         console.log("密码登录", Obj);
         if (Obj.code === 200) {
           Cookie.setCookie("userName", Obj.profile.nickname, 3600); // 登陆成功设置cookies
+          Cookie.setCookie("userId", Obj.profile.userId, 3600); // 登陆成功设置cookies
+          Cookie.setCookie("profile", JSON.stringify(Obj.profile), 3600); // 用cookie保存登陆成功返回的对象
+          loginFillInfo(JSON.stringify(Obj.profile)); // 登录后填充信息
           errors.style.display = "none";
           if (auto.checked === true) {
             window.localStorage.setItem("userName", Obj.profile.nickname);
@@ -192,6 +241,9 @@ window.onload = function () {
         console.log("短信登录", Obj);
         if (Obj.code === 200) {
           Cookie.setCookie("userName", Obj.profile.nickname, 3600); // 登陆成功设置cookies
+          Cookie.setCookie("userId", Obj.profile.userId, 3600); // 登陆成功设置cookies
+          Cookie.setCookie("profile", JSON.stringify(Obj.profile), 3600); // 用cookie保存登陆成功返回的对象
+          loginFillInfo(JSON.stringify(Obj.profile)); // 登录后填充信息
           errors.style.display = "none";
           if (auto.checked === true) {
             window.localStorage.setItem("userName", Obj.profile.nickname);
@@ -260,6 +312,10 @@ window.onload = function () {
         let Obj = JSON.parse(xhr.response);
         console.log("退出登录", Obj);
         Cookie.removeCookie("userName"); // 退出后清除cookie
+        Cookie.removeCookie("userId"); // 登陆成功设置cookies
+        Cookie.removeCookie("profile"); // 退出后清除登录信息
+        loginInfo.style.display = "block"; // 显示登录信息框
+        userProfile.style.display = "none"; // 隐藏用户详情框
         loginBtn.style.display = "block"; // 显示登录按钮
         avatar.style.display = "none"; // 隐藏头像
         loginBtnBox.removeEventListener("mouseenter", enter); // 移除，鼠标进入事件显示下拉框
@@ -321,10 +377,6 @@ window.onload = function () {
   // 搜索框失焦事件，失焦时隐藏搜索内容
   search.addEventListener("blur", function () {
     searchRes.style.display = "none";
-  });
-
-  carouBox.addEventListener("mouseover", function () {
-    console.log(1);
   });
 
   // 轮播图模块的异步请求
