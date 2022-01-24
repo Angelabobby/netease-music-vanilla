@@ -21,9 +21,10 @@ window.onload = function () {
   let loginBtnRed = document.querySelector(".login-btn-red"); // 页面主体部分的红色登录按钮
   let loginBoxHead = document.querySelector(".loginBoxHead"); // 登录框头部
   let loginBtnBox = document.querySelector("div.login-btn-mod");
-  let dropDown = document.querySelector("div.drop-down"); // 下拉框的容器
+  let dropDown = $("div.drop-down"); // 下拉框的容器
   let avatar = document.querySelector("img.avatar"); // 登陆后显示的头像
   let phone = document.querySelector("#phone"); // 手机号输入框
+  let captcha = document.querySelector("input#captcha");
   let password = document.querySelector("#password"); // 密码输入框
   let loginBtnBlue = document.querySelector("a.login-button-blue"); // 登录框蓝色登录按钮
   let auto = document.querySelector("input#auto"); // 自动登录复选框
@@ -222,7 +223,6 @@ window.onload = function () {
   });
 
   // 验证码登录AJAX
-  let captcha = document.querySelector("input#captcha");
   function captchaLoginAjax() {
     let xhr = new XMLHttpRequest();
     xhr.open(
@@ -295,10 +295,11 @@ window.onload = function () {
 
   // 登录成功后头像下拉列表函数
   function enter() {
-    dropDown.style.display = "block"; // 鼠标进入，显示下拉框
+    dropDown.show(); // 鼠标进入，显示下拉框
   }
   function leave() {
-    dropDown.style.display = "none"; // 鼠标移出，隐藏下拉框
+    // dropDown.style.display = "none";
+    dropDown.hide(); // 鼠标移出，隐藏下拉框
   }
 
   // 退出登录AJAX
@@ -320,7 +321,7 @@ window.onload = function () {
         avatar.style.display = "none"; // 隐藏头像
         loginBtnBox.removeEventListener("mouseenter", enter); // 移除，鼠标进入事件显示下拉框
         loginBtnBox.removeEventListener("mouseleave", leave); // 移除，鼠标移出事件隐藏下拉框
-        dropDown.style.display = "none"; // 隐藏登录下拉框
+        dropDown.hide(); // 隐藏登录下拉框
         phone.value = ""; // 退出后清除输入过的信息
         captcha.value = "";
         password.value = "";
@@ -886,7 +887,6 @@ window.onload = function () {
 
   // 回到顶部按钮
   let backTopButton = document.querySelector(".back-top");
-
   backTopButton.addEventListener("click", (e) => {
     e.preventDefault();
     document.body.scrollIntoView();
