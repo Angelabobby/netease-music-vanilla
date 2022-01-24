@@ -150,7 +150,13 @@ window.onload = function () {
     function move(Emove) {
       if (loginBox.offsetLeft > 0) {
         loginBox.style.left = Emove.clientX - Edown.offsetX + "px";
-        loginBox.style.top = Emove.clientY - Edown.offsetY + "px";
+        // loginBox.style.top = Emove.clientY - Edown.offsetY + "px";
+      } else {
+        loginBox.style.left = "0px";
+        if (Emove.clientX - pos > 0) {
+          pos = Emove.offsetX;
+          console.log(pos);
+        }
       }
     }
     document.addEventListener("mousemove", move);

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo</title>
+    <style>
+      html,
+      body {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      /* 弹出的登录框 */
+      div.login-box {
+        position: absolute;
+        top: 312px;
+        left: 696px;
+        width: 530px;
+        height: 313px;
+        z-index: 3;
+        /* display: none; */
+        border-radius: 4px;
+        background-color: white;
+        box-shadow: 0 5px 16px rgba(0, 0, 0, 0.8);
+      }
+
+      div.loginBoxHead {
+        width: 100%;
+        height: 38px;
+        background-color: rgb(45, 45, 45);
+        cursor: move;
+        user-select: none;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+      }
+
+      div.headLeft {
+        width: 505px;
+        float: left;
+        line-height: 38px;
+        color: white;
+      }
+
+      span.headLeftText {
+        padding-left: 20px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      div.close {
+        width: 25px;
+        height: 38px;
+        float: left;
+        line-height: 38px;
+      }
+
+      span.closeImg {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-image: url(https://s2.music.126.net/style/web2/img/layer/layer.png?c790e453cf6efe018ceed28c4999489d);
+        background-position-x: 0px;
+        background-position-y: -95px;
+        cursor: pointer;
+      }
+
+      div.loginBoxBody {
+        width: 100%;
+        height: 225px;
+        position: relative;
+        font-size: 12px;
+        color: rgb(102, 102, 102);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      div.verify {
+        width: 220px;
+        height: 152px;
+        padding: 30px 0 43px;
+        margin: 0 auto;
+      }
+
+      div.verify a {
+        text-decoration: none;
+        color: rgb(102, 102, 102);
+      }
+
+      div.verify input {
+        font-size: 12px;
+      }
+
+      input#phone,
+      input#password {
+        outline: none;
+      }
+
+      /* 手机号码模块 */
+      div.phone-mod {
+        width: 218px;
+        height: 30px;
+        border: 1px solid rgb(205, 205, 205);
+        border-radius: 2px;
+        position: relative;
+      }
+
+      a.country-code {
+        display: block;
+        width: 21px;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 18px 0 5px;
+        border-right: 1px solid rgb(205, 205, 205);
+        color: rgb(51, 51, 51) !important;
+        float: left;
+      }
+
+      span.country-code-arrow {
+        display: block;
+        width: 7px;
+        height: 4px;
+        background-image: url(https://s2.music.126.net/style/web2/img/icon2.png?26b40391b0504915d65e7d9155a0a1b9);
+        background-position: -260px -450px;
+        position: absolute;
+        left: 30px;
+        top: 14px;
+      }
+
+      div.phone-box {
+        width: 173px;
+        height: 30px;
+        float: left;
+      }
+
+      input#phone {
+        display: block;
+        width: 150px;
+        height: 20px;
+        padding: 5px 8px;
+        border: none;
+      }
+      input#phone::-webkit-input-placeholder {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        line-height: 20px;
+      }
+      input#password::-webkit-input-placeholder {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        line-height: 20px;
+      }
+
+      /* 密码登录模块 */
+      div.password-mod {
+        width: 218px;
+        height: 30px;
+        margin-top: 10px;
+        border: 1px solid rgb(205, 205, 205);
+        display: none;
+      }
+
+      input#password {
+        border: none;
+        width: 140px;
+        height: 20px;
+        padding: 5px 0px 5px 6px;
+        float: left;
+      }
+
+      a.forget {
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+        line-height: 30px;
+        margin-left: 10px;
+      }
+
+      div.errors {
+        width: 220px;
+        height: 18px;
+        margin-top: 5px;
+        display: none;
+      }
+
+      i.errors-logo {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background-image: url(https://s2.music.126.net/style/web2/img/icon.png?5dc7424b1e2e17429e74616166e59d99);
+        background-position: -50px -270px;
+        vertical-align: -4px;
+        margin-right: 5px;
+      }
+
+      span.errors-desc {
+        color: rgb(227, 50, 50);
+        vertical-align: top;
+      }
+
+      /* 验证码登录模块 */
+      div.captcha-mod {
+        width: 220px;
+        height: 32px;
+        margin-top: 10px;
+      }
+
+      input#captcha {
+        display: inline-block;
+        width: 122px;
+        height: 19px;
+        padding: 5px 6px 6px;
+        border: 1px solid rgb(205, 205, 205);
+        border-radius: 2px;
+        outline: none;
+      }
+      input#captcha::-webkit-input-placeholder {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        line-height: 20px;
+      }
+
+      a.get-captcha {
+        float: right;
+        display: block;
+        width: 70px;
+        height: 31px;
+        padding-right: 5px;
+        background-image: url(https://s2.music.126.net/style/web2/img/button2.png?146d9f4488b59a08c7ddf37ace1729d9);
+        background-position: right -100px;
+      }
+      a.get-captcha:hover {
+        background-position: right -182px;
+      }
+
+      a.get-captcha i {
+        display: inline-block;
+        width: 61px;
+        height: 31px;
+        padding: 0 2px 0 7px;
+        line-height: 31px;
+        font-style: normal;
+        font-size: 12px;
+        color: rgb(51, 51, 51);
+        font-family: Arial, Helvetica, sans-serif;
+        background-image: url(https://s2.music.126.net/style/web2/img/button2.png?146d9f4488b59a08c7ddf37ace1729d9);
+        background-position: 0 -59px;
+      }
+      a.get-captcha i:hover {
+        background-position: 0 -141px;
+      }
+
+      /* 登录选择项模块 */
+      div.option-mod {
+        width: 220px;
+        height: 16.391px;
+        margin-top: 10px;
+      }
+
+      a.choose-login-method:hover,
+      a.forget:hover {
+        text-decoration: underline;
+      }
+
+      div.option-mod a {
+        float: left;
+      }
+
+      div.option-mod label {
+        display: block;
+        float: right;
+      }
+
+      div.option-mod input {
+        margin-right: 0;
+      }
+
+      div.option-mod span {
+        vertical-align: 2px;
+      }
+
+      div.login-button-mod {
+        width: 220px;
+        height: 31px;
+        margin-top: 20px;
+      }
+
+      a.login-button-blue {
+        display: block;
+        width: 215px;
+        height: 31px;
+        padding-right: 5px;
+        background-image: url(https://s2.music.126.net/style/web2/img/button2.png?146d9f4488b59a08c7ddf37ace1729d9);
+        background-position: right -428px;
+        background-repeat: no-repeat;
+      }
+      a.login-button-blue:hover {
+        background-position: right -510px;
+      }
+
+      a.login-button-blue i {
+        display: block;
+        width: 180px;
+        height: 31px;
+        line-height: 31px;
+        background-image: url(https://s2.music.126.net/style/web2/img/button2.png?146d9f4488b59a08c7ddf37ace1729d9);
+        background-position: 0 -387px;
+        background-repeat: no-repeat;
+        padding: 0 15px 0 20px;
+        text-align: center;
+        font-style: normal;
+        color: white;
+      }
+      a.login-button-blue i:hover {
+        background-position: 0 -469px;
+      }
+
+      a.login {
+        display: inline-block;
+        width: 218px;
+        height: 30px;
+        background-image: url(https://s2.music.126.net/style/web2/img/button2.png?0b976e567899abda9fa55c1bddc81948);
+        background-position-x: 0;
+        background-position-y: -388px;
+        border-radius: 3px;
+        text-align: center;
+        line-height: 30px;
+        text-decoration: none;
+        color: white;
+        font-size: 12px;
+      }
+
+      div.login-box-foot {
+        width: 490px;
+        height: 48px;
+        padding: 0 19px;
+        border-top: 1px solid rgb(198, 198, 198);
+        background-color: rgb(247, 247, 247);
+      }
+
+      div.login-box-foot a {
+        display: block;
+        height: 48px;
+        line-height: 48px;
+        font-size: 12px;
+        font-family: Arial, Helvetica, sans-serif;
+        text-decoration: none;
+      }
+
+      div.login-box-foot a.login-methods {
+        float: left;
+        color: rgb(12, 114, 195);
+      }
+
+      div.login-box-foot a.register {
+        float: right;
+        color: rgb(153, 153, 153);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 登录框 -->
+    <div class="login-box">
+      <div class="loginBoxHead">
+        <div class="headLeft">
+          <span class="headLeftText">手机号登录</span>
+        </div>
+        <div class="close">
+          <span class="closeImg"></span>
+        </div>
+      </div>
+
+      <div class="loginBoxBody">
+        <div class="verify">
+          <!-- 手机号码模块 -->
+          <div class="phone-mod">
+            <a href="" class="country-code">
+              +86
+              <span class="country-code-arrow"></span>
+            </a>
+
+            <div class="phone-box">
+              <input type="text" name="" id="phone" placeholder="请输入手机号" />
+            </div>
+          </div>
+
+          <!-- 密码登录模块 -->
+          <div class="password-mod">
+            <input type="password" name="" id="password" placeholder="请输入密码" />
+            <a href="" class="forget">忘记密码？</a>
+          </div>
+
+          <!-- 验证码登录模块 -->
+          <div class="captcha-mod">
+            <input type="text" name="" id="captcha" placeholder="请输入验证码" />
+            <a href="" class="get-captcha">
+              <i>获取验证码</i>
+            </a>
+          </div>
+
+          <!-- 错误模块 -->
+          <div class="errors-mod">
+            <div class="errors">
+              <i class="errors-logo"></i>
+              <span class="errors-desc"></span>
+            </div>
+          </div>
+
+          <!-- 选择登录方式模块 -->
+          <div class="option-mod">
+            <a href="" class="choose-login-method">密码登录</a>
+            <label for="auto">
+              <input type="checkbox" name="" id="auto" />
+              <span>自动登录</span>
+            </label>
+          </div>
+
+          <!-- 登录按钮模块 -->
+          <div class="login-button-mod">
+            <a href="" class="login-button-blue">
+              <i>登&nbsp;&nbsp;&nbsp;录</i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-box-foot">
+        <a href="" class="login-methods">&lt;&nbsp;&nbsp;其他登录方式</a>
+        <a href="" class="register">没有帐号？免费注册&nbsp;&nbsp;&gt;</a>
+      </div>
+    </div>
+
+    <script>
+      // e.clientX 鼠标在文档的横向位置
+      // e.offsetX 鼠标在容器内的横向位置
+      // div.offsetLeft 容器左边在父容器内的横向位置
+      let loginBoxHead = document.querySelector(".loginBoxHead"); // 登录框头部
+      let loginBox = document.querySelector(".login-box"); // 弹出的登录框
+      // 登录框拖动事件
+      let maxLeft = window.innerWidth - loginBox.clientWidth;
+      let maxTop = window.innerHeight - loginBox.clientHeight;
+      let oldX;
+      loginBoxHead.addEventListener("mousedown", function (Edown) {
+        let downX = Edown.offsetX;
+        let downY = Edown.offsetY;
+        function move(Emove) {
+          // loginBox.style.left = Emove.clientX - Edown.offsetX + "px";
+          // loginBox.style.top = Emove.clientY - Edown.offsetY + "px";
+          left = Emove.clientX - downX;
+          topp = Emove.clientY - downY;
+          // left = left < 0 ? 0 : left;
+          if (left < 0 && Emove.pageX < oldX) {
+            left = 0;
+            downX = Emove.offsetX;
+          }
+          // left = left > maxLeft ? maxLeft : left;
+          if (left > maxLeft && Emove.pageX > oldX) {
+            left = maxLeft;
+            downX = Emove.offsetX;
+          }
+          topp = topp < 0 ? 0 : topp;
+          topp = topp > maxTop ? maxTop : topp;
+          loginBox.style.left = left + "px";
+          loginBox.style.top = topp + "px";
+          oldX = Emove.pageX;
+        }
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", function () {
+          document.removeEventListener("mousemove", move);
+        });
+      });
+    </script>
+  </body>
+</html>
