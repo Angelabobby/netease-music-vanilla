@@ -103,7 +103,9 @@ window.onload = function () {
       loginInfo.style.display = "none"; // 隐藏登录信息框
       userProfile.style.display = "block"; // 显示用户详情框
       $.get({
-        url: `https://muise-git-master-329639010.vercel.app/user/detail?uid=${Cookie.getCookie("userId")}`,
+        url: `https://muise-git-master-329639010.vercel.app/user/detail?uid=${Cookie.getCookie(
+          "userId"
+        )}`,
         success: function (data) {
           level.innerHTML = "等级: " + data.level;
         },
@@ -146,8 +148,10 @@ window.onload = function () {
   // 登录框拖动事件
   loginBoxHead.addEventListener("mousedown", function (Edown) {
     function move(Emove) {
-      loginBox.style.left = Emove.clientX - Edown.offsetX + "px";
-      loginBox.style.top = Emove.clientY - Edown.offsetY + "px";
+      if (loginBox.offsetLeft > 0) {
+        loginBox.style.left = Emove.clientX - Edown.offsetX + "px";
+        loginBox.style.top = Emove.clientY - Edown.offsetY + "px";
+      }
     }
     document.addEventListener("mousemove", move);
     loginBoxHead.addEventListener("mouseup", function () {
