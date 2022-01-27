@@ -8,8 +8,7 @@
     <style>
       html,
       body {
-        max-width: 100%;
-        overflow-x: hidden;
+        overflow: hidden;
       }
 
       /* 弹出的登录框 */
@@ -440,6 +439,7 @@
       let maxLeft = window.innerWidth - loginBox.clientWidth;
       let maxTop = window.innerHeight - loginBox.clientHeight;
       let oldX;
+      let oldY;
       loginBoxHead.addEventListener("mousedown", function (Edown) {
         let downX = Edown.offsetX;
         let downY = Edown.offsetY;
@@ -458,11 +458,20 @@
             left = maxLeft;
             downX = Emove.offsetX;
           }
-          topp = topp < 0 ? 0 : topp;
-          topp = topp > maxTop ? maxTop : topp;
+          // topp = topp < 0 ? 0 : topp;
+          if (topp < 0 && Emove.pageY < oldY) {
+            topp = 0;
+            downY = Emove.offsetY;
+          }
+          // topp = topp > maxTop ? maxTop : topp;
+          if (topp > maxTop && Emove.pageY > oldY) {
+            topp = maxTop;
+            downY = Emove.offsetY;
+          }
           loginBox.style.left = left + "px";
           loginBox.style.top = topp + "px";
           oldX = Emove.pageX;
+          oldY = Emove.pageY;
         }
         document.addEventListener("mousemove", move);
         document.addEventListener("mouseup", function () {
